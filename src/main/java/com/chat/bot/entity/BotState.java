@@ -1,0 +1,13 @@
+package com.chat.bot.entity;
+
+public enum BotState {
+    START,
+    SERVICE_SELECTED,
+    LOCATION_SELECTED,
+    DATE_SELECTED,
+    TIME_SELECTED,
+    PAYMENT_OPTION_SELECTED,
+    PAYMENT_PENDING,
+    CONFIRMATION_PENDING,
+    BOOKING_CONFIRMED
+}
