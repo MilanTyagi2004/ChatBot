@@ -2,6 +2,7 @@ package com.chat.bot.entity;
 
 public enum BotState {
     START,
+    NAME_COLLECTED,
     SERVICE_SELECTED,
     LOCATION_SELECTED,
     DATE_SELECTED,
