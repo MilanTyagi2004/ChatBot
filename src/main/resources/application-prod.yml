@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:3306/chatbot?useSSL=true&allowPublicKeyRetrieval=false&serverTimezone=UTC
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate    # NEVER use 'update' in production
+    show-sql: false          # Disable SQL logging in prod
+
+whatsapp:
+  verify-token: ${WHATSAPP_VERIFY_TOKEN}
+  access-token: ${WHATSAPP_ACCESS_TOKEN}
+  phone-number-id: ${WHATSAPP_PHONE_NUMBER_ID}
+
+razorpay:
+  key-id: ${RAZORPAY_KEY_ID}
+  key-secret: ${RAZORPAY_KEY_SECRET}
+  callback-url: ${RAZORPAY_CALLBACK_URL}
+  webhook-secret: ${RAZORPAY_WEBHOOK_SECRET}
+
+server:
+  port: 8080
