@@ -202,6 +202,8 @@ public class BookingService {
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
 
         booking.setBookingStatus(BookingStatus.CANCELLED);
+        // Free up the slot by modifying the time slightly to avoid DB UniqueConstraint
+        booking.setAppointmentTime(booking.getAppointmentTime() + " (Cancelled)");
         bookingRepository.save(booking);
     }
 

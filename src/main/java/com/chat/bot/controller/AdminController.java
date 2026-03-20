@@ -62,4 +62,16 @@ public class AdminController {
     public ResponseEntity<Booking> completeBooking(@PathVariable String id) {
         return ResponseEntity.ok(bookingService.completeBooking(id));
     }
+
+    // ================================
+    // CANCEL BOOKING
+    // ================================
+
+    @PutMapping("/bookings/{id}/cancel")
+    @Operation(summary = "Cancel a booking",
+            description = "Marks a booking as cancelled and frees up the slot for others to book")
+    public ResponseEntity<String> cancelBooking(@PathVariable String id) {
+        bookingService.cancelBooking(id);
+        return ResponseEntity.ok("Booking cancelled successfully, slot is now free.");
+    }
 }
