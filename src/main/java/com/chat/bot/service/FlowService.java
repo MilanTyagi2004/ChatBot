@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,19 @@ public class FlowService {
         // ================================
 
         if (sessionService.isTimedOut(session)) {
+            sessionService.reset(session);
+        }
+
+        // ================================
+        // GREETING RESET (restart mid-flow)
+        // ================================
+
+        Set<String> greetings = Set.of(
+                "hi", "hello", "hey", "hii", "hiii",
+                "start", "restart", "menu", "reset");
+
+        if (greetings.contains(message.trim().toLowerCase())
+                && session.getState() != BotState.START) {
             sessionService.reset(session);
         }
 

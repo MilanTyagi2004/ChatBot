@@ -32,4 +32,20 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
     List<Booking> findByLocation(String location);
 
     void deleteByBookingStatusAndCreatedAtBefore(BookingStatus status, LocalDateTime cutoff);
+
+    // ================================
+    // ADMIN STATS QUERIES
+    // ================================
+
+    long countByBookingStatusInAndAppointmentDate(List<BookingStatus> statuses, LocalDate date);
+
+    long countByBookingStatusInAndAppointmentDateBetween(List<BookingStatus> statuses, LocalDate start, LocalDate end);
+
+    // ================================
+    // ADMIN LISTING QUERIES
+    // ================================
+
+    List<Booking> findByBookingStatusOrderByAppointmentDateAsc(BookingStatus status);
+
+    List<Booking> findByBookingStatusOrderByAppointmentDateDesc(BookingStatus status);
 }

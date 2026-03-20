@@ -1,5 +1,6 @@
 package com.chat.bot.service;
 
+import com.chat.bot.dto.BookingStatsDTO;
 import com.chat.bot.entity.Booking;
 import com.chat.bot.entity.BookingStatus;
 import com.chat.bot.entity.PaymentStatus;
@@ -167,7 +168,7 @@ public class BookingService {
         return bookingRepository
                 .existsByLocationAndAppointmentDateAndAppointmentTimeAndBookingStatusIn(
                         location, date, time,
-                        List.of(BookingStatus.PENDING, BookingStatus.CONFIRMED));
+                        List.of(BookingStatus.PENDING, BookingStatus.CONFIRMED, BookingStatus.COMPLETED));
     }
 
     // ================================
@@ -202,5 +203,58 @@ public class BookingService {
 
         booking.setBookingStatus(BookingStatus.CANCELLED);
         bookingRepository.save(booking);
+    }
+
+    // ================================
+    // ADMIN: BOOKING STATS
+    // ================================
+
+    private static final List<BookingStatus> REAL_BOOKING_STATUSES =
+            List.of(BookingStatus.CONFIRMED, BookingStatus.COMPLETED);
+
+    public BookingStatsDTO getBookingStats() {
+        LocalDate today = LocalDate.now();
+        LocalDate monthStart = today.withDayOfMonth(1);
+        LocalDate yearStart = today.withDayOfYear(1);
+
+        long todayCount = bookingRepository
+                .countByBookingStatusInAndAppointmentDate(REAL_BOOKING_STATUSES, today);
+
+        long monthCount = bookingRepository
+                .countByBookingStatusInAndAppointmentDateBetween(REAL_BOOKING_STATUSES, monthStart, today);
+
+        long yearCount = bookingRepository
+                .countByBookingStatusInAndAppointmentDateBetween(REAL_BOOKING_STATUSES, yearStart, today);
+
+        return new BookingStatsDTO(todayCount, monthCount, yearCount);
+    }
+
+    // ================================
+    // ADMIN: COMPLETE BOOKING
+    // ================================
+
+    @Transactional
+    public Booking completeBooking(String bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        if (booking.getBookingStatus() != BookingStatus.CONFIRMED) {
+            throw new RuntimeException("Only confirmed bookings can be marked as completed");
+        }
+
+        booking.setBookingStatus(BookingStatus.COMPLETED);
+        return bookingRepository.save(booking);
+    }
+
+    // ================================
+    // ADMIN: LIST BOOKINGS BY STATUS
+    // ================================
+
+    public List<Booking> getConfirmedBookings() {
+        return bookingRepository.findByBookingStatusOrderByAppointmentDateAsc(BookingStatus.CONFIRMED);
+    }
+
+    public List<Booking> getCompletedBookings() {
+        return bookingRepository.findByBookingStatusOrderByAppointmentDateDesc(BookingStatus.COMPLETED);
     }
 }

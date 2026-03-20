@@ -20,6 +20,7 @@ public class SecurityConfig {
                         .requestMatchers("/webhook/**").permitAll()
                         .requestMatchers("/payment/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/admin/**").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults());
 
