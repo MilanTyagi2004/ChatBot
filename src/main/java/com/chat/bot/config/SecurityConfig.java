@@ -45,7 +45,6 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 "/payment/**"
                         ).permitAll()
 
-                        // ✅ Swagger endpoints (FULL ACCESS)
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
@@ -56,16 +55,12 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 "/webjars/**"
                         ).permitAll()
 
-                        // admin (optional – secure later if needed)
                         .requestMatchers("/admin/**").permitAll()
 
-                        // बाकी सब secured
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
 
-                .formLogin(form -> form.disable())
-
-                .httpBasic(Customizer.withDefaults());
+                .formLogin(form -> form.disable()); // no login UI
 
         return http.build();
     }
